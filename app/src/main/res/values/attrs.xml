@@ -1,0 +1,9 @@
+<resources>
+    <declare-styleable name="CountDown">
+        <attr name="time" format="integer" />
+        <attr name="labelTextColor" format="color" />
+        <attr name="valueTextColor" format="color" />
+        <attr name="labelTextSize" format="dimension" />
+        <attr name="valueTextSize" format="dimension" />
+    </declare-styleable>
+</resources>
