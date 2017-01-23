@@ -65,9 +65,19 @@ public class CountdownView extends View {
         init();
     }
 
+    /**
+     * Use only to animate the timer.
+     * @param time Remaining time to display.
+     */
     public void setTime(int time) {
         this.time = time;
         countdownTimer.onTick(time);
+    }
+
+    public void setRemainingTime(long time) {
+        this.time = time;
+        countdownTimer.cancel();
+        countdownTimer = buildCountdownTimer();
     }
 
     public void setOnCompleteCountdownListener(MilestoneListener onCompleteCountdownListener) {
@@ -80,45 +90,6 @@ public class CountdownView extends View {
 
     public void setFormatter(TimeRemainingFormatter formatter) {
         timeElement.setFormatter(formatter);
-    }
-
-    private void init() {
-        labelTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        labelTextPaint.setColor(mTextColor);
-        labelTextPaint.setTextSize(labelTextSize);
-        labelTextPaint.setTypeface(Typeface.DEFAULT);
-
-        valueTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        valueTextPaint.setColor(mTextColor);
-        valueTextPaint.setTextSize(valueTextSize);
-        valueTextPaint.setTypeface(Typeface.SANS_SERIF);
-
-        if (formatter == null)
-            formatter = new DayHoursMinutesFormatter();
-
-        timeElement = buildCountdownTime(valueTopMargin, labelTextPaint, valueTextPaint);
-        initialDrawingPosition = new PointF(initialXPosition, initialYPosition);
-        timeElement.calculatePosition(initialDrawingPosition);
-
-        countdownTimer = new CountDownTimer(time, ONE_SECOND_INTERVAL) {
-            public void onTick(long millisUntilFinished) {
-                for (Iterator<Milestone> iterator = milestones.iterator(); iterator.hasNext(); ) {
-                    Milestone milestone = iterator.next();
-                    if (milestone.isCompleted(millisUntilFinished)) {
-                        iterator.remove();
-                        milestone.onComplete();
-                    }
-                }
-
-                timeElement.updateValue(millisUntilFinished);
-                invalidate();
-            }
-
-            public void onFinish() {
-                if (onCompleteCountdownListener != null)
-                    onCompleteCountdownListener.onComplete();
-            }
-        };
     }
 
     public void start() {
@@ -152,5 +123,48 @@ public class CountdownView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         timeElement.displayTime(canvas);
+    }
+
+    private void init() {
+        labelTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        labelTextPaint.setColor(mTextColor);
+        labelTextPaint.setTextSize(labelTextSize);
+        labelTextPaint.setTypeface(Typeface.DEFAULT);
+
+        valueTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        valueTextPaint.setColor(mTextColor);
+        valueTextPaint.setTextSize(valueTextSize);
+        valueTextPaint.setTypeface(Typeface.SANS_SERIF);
+
+        if (formatter == null)
+            formatter = new DayHoursMinutesFormatter();
+
+        timeElement = buildCountdownTime(valueTopMargin, labelTextPaint, valueTextPaint);
+        initialDrawingPosition = new PointF(initialXPosition, initialYPosition);
+        timeElement.calculatePosition(initialDrawingPosition);
+
+        countdownTimer = buildCountdownTimer();
+    }
+
+    private CountDownTimer buildCountdownTimer() {
+        return new CountDownTimer(time, ONE_SECOND_INTERVAL) {
+            public void onTick(long millisUntilFinished) {
+                for (Iterator<Milestone> iterator = milestones.iterator(); iterator.hasNext(); ) {
+                    Milestone milestone = iterator.next();
+                    if (milestone.isCompleted(millisUntilFinished)) {
+                        iterator.remove();
+                        milestone.onComplete();
+                    }
+                }
+
+                timeElement.updateValue(millisUntilFinished);
+                invalidate();
+            }
+
+            public void onFinish() {
+                if (onCompleteCountdownListener != null)
+                    onCompleteCountdownListener.onComplete();
+            }
+        };
     }
 }
