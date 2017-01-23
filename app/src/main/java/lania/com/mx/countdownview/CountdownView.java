@@ -25,6 +25,7 @@ public class CountdownView extends View {
     private Paint labelTextPaint;
     private Paint valueTextPaint;
     private CountdownTime timeElement;
+    private HoursMinutesSecondsFormatter formatter;
 
     public CountdownView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -61,11 +62,13 @@ public class CountdownView extends View {
         valueTextPaint.setTextSize(valueTextSize);
         valueTextPaint.setTypeface(Typeface.SANS_SERIF);
 
+        formatter = new HoursMinutesSecondsFormatter();
+
         new CountDownTimer(time, ONE_SECOND_INTERVAL) {
 
             public void onTick(long millisUntilFinished) {
                 if (timeElement != null) {
-                    timeElement.setValue(CountdownTime.formatDuration(millisUntilFinished));
+                    timeElement.setValue(formatter.format(millisUntilFinished));
                     invalidate();
                 }
             }
@@ -94,7 +97,8 @@ public class CountdownView extends View {
 
 
         PointF initialDrawingPosition = new PointF(initialXPosition, initialYPosition);
-        timeElement = new CountdownTime("Hour", "Min", "Sec", CountdownTime.formatDuration(time), valueTopMargin);
+        String timeValue = formatter.format(time);
+        timeElement = new CountdownTime(formatter, timeValue, valueTopMargin);
         timeElement.calculatePosition(labelTextPaint, valueTextPaint, initialDrawingPosition);
     }
 
@@ -104,10 +108,11 @@ public class CountdownView extends View {
         PointF label1Location = timeElement.getTimeLabel1DrawPosition();
         PointF label2Location = timeElement.getTimeLabel2DrawPosition();
         PointF label3Location = timeElement.getTimeLabel3DrawPosition();
+        canvas.drawText(formatter.getLabel1(), label1Location.x, label1Location.y, labelTextPaint);
+        canvas.drawText(formatter.getLabel2(), label2Location.x, label2Location.y, labelTextPaint);
+        canvas.drawText(formatter.getLabel3(), label3Location.x, label3Location.y, labelTextPaint);
+
         PointF valueLocation = timeElement.getTimeValueDrawPosition();
-        canvas.drawText(timeElement.getLabel1(), label1Location.x, label1Location.y, labelTextPaint);
-        canvas.drawText(timeElement.getLabel2(), label2Location.x, label2Location.y, labelTextPaint);
-        canvas.drawText(timeElement.getLabel3(), label3Location.x, label3Location.y, labelTextPaint);
         canvas.drawText(timeElement.getValue(), valueLocation.x, valueLocation.y, valueTextPaint);
     }
 }
