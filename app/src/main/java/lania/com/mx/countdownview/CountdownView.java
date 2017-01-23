@@ -10,6 +10,10 @@ import android.os.CountDownTimer;
 import android.util.AttributeSet;
 import android.view.View;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  * Created by clerks on 1/21/17.
  */
@@ -25,9 +29,14 @@ public class CountdownView extends View {
     private Paint labelTextPaint;
     private Paint valueTextPaint;
     private CountdownTime timeElement;
-    private HoursMinutesSecondsFormatter formatter;
+    private TimeRemainingFormatter formatter;
 
-    private CountdownListener countdownListener;
+    private MilestoneListener onCompleteCountdownListener;
+
+    /**
+     * Points of interest for the view holder. Allows to interact with the Countdown view and set new parameters or formats.
+     */
+    private List<Milestone> milestones = new ArrayList<>();
 
     public CountdownView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -53,8 +62,16 @@ public class CountdownView extends View {
         invalidate();
     }
 
-    public void setCountdownListener(CountdownListener countdownListener) {
-        this.countdownListener = countdownListener;
+    public void setOnCompleteCountdownListener(MilestoneListener onCompleteCountdownListener) {
+        this.onCompleteCountdownListener = onCompleteCountdownListener;
+    }
+
+    public void addMilestone(Milestone milestone) {
+        this.milestones.add(milestone);
+    }
+
+    public void setFormatter(TimeRemainingFormatter formatter) {
+        this.formatter = formatter;
     }
 
     private void init() {
@@ -68,19 +85,28 @@ public class CountdownView extends View {
         valueTextPaint.setTextSize(valueTextSize);
         valueTextPaint.setTypeface(Typeface.SANS_SERIF);
 
-        formatter = new HoursMinutesSecondsFormatter();
+        formatter = new DayHoursMinutesFormatter();
 
         new CountDownTimer(time, ONE_SECOND_INTERVAL) {
             public void onTick(long millisUntilFinished) {
-                if (timeElement != null) {
-                    timeElement.setValue(formatter.format(millisUntilFinished));
-                    invalidate();
+                if (timeElement == null)
+                    return;
+
+                for (Iterator<Milestone> iterator = milestones.iterator(); iterator.hasNext();) {
+                    Milestone milestone = iterator.next();
+                    if (milestone.isCompleted(millisUntilFinished)) {
+                        iterator.remove();
+                        milestone.onComplete();
+                    }
                 }
+
+                timeElement.setValue(formatter.format(millisUntilFinished));
+                invalidate();
             }
 
             public void onFinish() {
-                if (countdownListener != null)
-                    countdownListener.onFinish();
+                if (onCompleteCountdownListener != null)
+                    onCompleteCountdownListener.onComplete();
             }
         }.start();
     }
@@ -119,9 +145,5 @@ public class CountdownView extends View {
 
         PointF valueLocation = timeElement.getTimeValueDrawPosition();
         canvas.drawText(timeElement.getValue(), valueLocation.x, valueLocation.y, valueTextPaint);
-    }
-
-    public interface CountdownListener {
-        void onFinish();
     }
 }
