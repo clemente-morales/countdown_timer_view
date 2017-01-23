@@ -3,5 +3,5 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="countdown_label_text_size">16sp</dimen>
-    <dimen name="countdown_value_text_size">24sp</dimen>
+    <dimen name="countdown_value_text_size">40sp</dimen>
 </resources>
