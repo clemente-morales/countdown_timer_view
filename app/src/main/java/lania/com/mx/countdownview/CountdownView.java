@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Typeface;
 import android.os.CountDownTimer;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -22,6 +23,7 @@ public class CountdownView extends View {
     public static final int DEFAULT_TIME = 10000;
     public static final int ONE_SECOND_INTERVAL = 1000;
 
+    float valueTopMargin = 20f;
     private long time;
     private final int mTextColor;
     private final int labelTextSize;
@@ -33,10 +35,15 @@ public class CountdownView extends View {
 
     private MilestoneListener onCompleteCountdownListener;
 
+    float initialXPosition = 0.0f;
+    float initialYPosition = 0.0f;
+
     /**
      * Points of interest for the view holder. Allows to interact with the Countdown view and set new parameters or formats.
      */
     private List<Milestone> milestones = new ArrayList<>();
+
+    private PointF initialDrawingPosition;
 
     public CountdownView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -71,7 +78,7 @@ public class CountdownView extends View {
     }
 
     public void setFormatter(TimeRemainingFormatter formatter) {
-        this.formatter = formatter;
+        timeElement.setFormatter(formatter);
     }
 
     private void init() {
@@ -86,13 +93,13 @@ public class CountdownView extends View {
         valueTextPaint.setTypeface(Typeface.SANS_SERIF);
 
         formatter = new DayHoursMinutesFormatter();
+        timeElement = buildCountdownTime(valueTopMargin, labelTextPaint, valueTextPaint);
+        initialDrawingPosition = new PointF(initialXPosition, initialYPosition);
+        timeElement.calculatePosition(initialDrawingPosition);
 
         new CountDownTimer(time, ONE_SECOND_INTERVAL) {
             public void onTick(long millisUntilFinished) {
-                if (timeElement == null)
-                    return;
-
-                for (Iterator<Milestone> iterator = milestones.iterator(); iterator.hasNext();) {
+                for (Iterator<Milestone> iterator = milestones.iterator(); iterator.hasNext(); ) {
                     Milestone milestone = iterator.next();
                     if (milestone.isCompleted(millisUntilFinished)) {
                         iterator.remove();
@@ -100,7 +107,7 @@ public class CountdownView extends View {
                     }
                 }
 
-                timeElement.setValue(formatter.format(millisUntilFinished));
+                timeElement.updateValue(millisUntilFinished);
                 invalidate();
             }
 
@@ -123,27 +130,20 @@ public class CountdownView extends View {
         float ww = (float) w - xpad;
         float hh = (float) h - ypad;
 
-        float initialXPosition = 0.0f;
-        float initialYPosition = 0.0f;
-        float valueTopMargin = 20f;
+        timeElement.calculatePosition(initialDrawingPosition);
+    }
 
-
-        PointF initialDrawingPosition = new PointF(initialXPosition, initialYPosition);
-        timeElement = new CountdownTime(formatter, time, valueTopMargin);
-        timeElement.calculatePosition(labelTextPaint, valueTextPaint, initialDrawingPosition);
+    /**
+     * Override countdown creation if you require to display more than 3 time units.
+     */
+    @NonNull
+    protected CountdownTime buildCountdownTime(float valueTopMargin, Paint labelTextPaint, Paint valueTextPaint) {
+        return new CountdownTime(formatter, time, valueTopMargin, labelTextPaint, valueTextPaint);
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        PointF label1Location = timeElement.getTimeLabel1DrawPosition();
-        PointF label2Location = timeElement.getTimeLabel2DrawPosition();
-        PointF label3Location = timeElement.getTimeLabel3DrawPosition();
-        canvas.drawText(formatter.getLabel1(), label1Location.x, label1Location.y, labelTextPaint);
-        canvas.drawText(formatter.getLabel2(), label2Location.x, label2Location.y, labelTextPaint);
-        canvas.drawText(formatter.getLabel3(), label3Location.x, label3Location.y, labelTextPaint);
-
-        PointF valueLocation = timeElement.getTimeValueDrawPosition();
-        canvas.drawText(timeElement.getValue(), valueLocation.x, valueLocation.y, valueTextPaint);
+        timeElement.displayTime(canvas);
     }
 }
