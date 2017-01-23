@@ -44,6 +44,7 @@ public class CountdownView extends View {
     private List<Milestone> milestones = new ArrayList<>();
 
     private PointF initialDrawingPosition;
+    private CountDownTimer countdownTimer;
 
     public CountdownView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -64,9 +65,9 @@ public class CountdownView extends View {
         init();
     }
 
-    public void setTime(long time) {
+    public void setTime(int time) {
         this.time = time;
-        invalidate();
+        countdownTimer.onTick(time);
     }
 
     public void setOnCompleteCountdownListener(MilestoneListener onCompleteCountdownListener) {
@@ -92,12 +93,14 @@ public class CountdownView extends View {
         valueTextPaint.setTextSize(valueTextSize);
         valueTextPaint.setTypeface(Typeface.SANS_SERIF);
 
-        formatter = new DayHoursMinutesFormatter();
+        if (formatter == null)
+            formatter = new DayHoursMinutesFormatter();
+
         timeElement = buildCountdownTime(valueTopMargin, labelTextPaint, valueTextPaint);
         initialDrawingPosition = new PointF(initialXPosition, initialYPosition);
         timeElement.calculatePosition(initialDrawingPosition);
 
-        new CountDownTimer(time, ONE_SECOND_INTERVAL) {
+        countdownTimer = new CountDownTimer(time, ONE_SECOND_INTERVAL) {
             public void onTick(long millisUntilFinished) {
                 for (Iterator<Milestone> iterator = milestones.iterator(); iterator.hasNext(); ) {
                     Milestone milestone = iterator.next();
@@ -115,7 +118,11 @@ public class CountdownView extends View {
                 if (onCompleteCountdownListener != null)
                     onCompleteCountdownListener.onComplete();
             }
-        }.start();
+        };
+    }
+
+    public void start() {
+        countdownTimer.start();
     }
 
     @Override

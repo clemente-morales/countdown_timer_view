@@ -1,13 +1,18 @@
 package lania.com.mx.countdownview;
 
+import android.animation.Animator;
+import android.animation.ObjectAnimator;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.animation.LinearInterpolator;
 import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String REMAINING_TIME_PROPERTY = "time";
+    public static final int ANIM_DURATION = 3000;
     private Milestone switchDaysToHoursMilestone = new Milestone(new MilestoneListener() {
         @Override
         public void onComplete() {
@@ -36,5 +41,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         countdownView.addMilestone(switchDaysToHoursMilestone);
+
+        countdownView.setFormatter(new DayHoursMinutesFormatter());
+
+        // Animate starting point
+        LinearInterpolator linearInterpolator = new LinearInterpolator();
+        ObjectAnimator restoreCurrentRemainingTime = ObjectAnimator.ofInt(countdownView, REMAINING_TIME_PROPERTY, 180000 , 5000 );
+        restoreCurrentRemainingTime.setDuration(ANIM_DURATION);
+        restoreCurrentRemainingTime.setInterpolator(linearInterpolator);
+        restoreCurrentRemainingTime.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                countdownView.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        restoreCurrentRemainingTime.start();
     }
 }
