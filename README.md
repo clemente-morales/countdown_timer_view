@@ -1,5 +1,5 @@
 # countdown_timer_view
-Countdown timer to be displayed in a view. Allows to pass callbacks to be executed in specific points and format setting to display the remaining time.
+Countdown timer to be displayed in a view. Allows to pass callbacks to be executed in specific points of time and changing the format to display the remaining time.
 
 ![Alt text](countdownView.gif?raw=true "Countdown view")
 
