@@ -27,6 +27,8 @@ public class CountdownView extends View {
     private CountdownTime timeElement;
     private HoursMinutesSecondsFormatter formatter;
 
+    private CountdownListener countdownListener;
+
     public CountdownView(Context context, AttributeSet attrs) {
         super(context, attrs);
         TypedArray a = context.getTheme().obtainStyledAttributes(
@@ -51,6 +53,10 @@ public class CountdownView extends View {
         invalidate();
     }
 
+    public void setCountdownListener(CountdownListener countdownListener) {
+        this.countdownListener = countdownListener;
+    }
+
     private void init() {
         labelTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         labelTextPaint.setColor(mTextColor);
@@ -65,7 +71,6 @@ public class CountdownView extends View {
         formatter = new HoursMinutesSecondsFormatter();
 
         new CountDownTimer(time, ONE_SECOND_INTERVAL) {
-
             public void onTick(long millisUntilFinished) {
                 if (timeElement != null) {
                     timeElement.setValue(formatter.format(millisUntilFinished));
@@ -74,7 +79,8 @@ public class CountdownView extends View {
             }
 
             public void onFinish() {
-
+                if (countdownListener != null)
+                    countdownListener.onFinish();
             }
         }.start();
     }
@@ -97,8 +103,7 @@ public class CountdownView extends View {
 
 
         PointF initialDrawingPosition = new PointF(initialXPosition, initialYPosition);
-        String timeValue = formatter.format(time);
-        timeElement = new CountdownTime(formatter, timeValue, valueTopMargin);
+        timeElement = new CountdownTime(formatter, time, valueTopMargin);
         timeElement.calculatePosition(labelTextPaint, valueTextPaint, initialDrawingPosition);
     }
 
@@ -114,5 +119,9 @@ public class CountdownView extends View {
 
         PointF valueLocation = timeElement.getTimeValueDrawPosition();
         canvas.drawText(timeElement.getValue(), valueLocation.x, valueLocation.y, valueTextPaint);
+    }
+
+    public interface CountdownListener {
+        void onFinish();
     }
 }

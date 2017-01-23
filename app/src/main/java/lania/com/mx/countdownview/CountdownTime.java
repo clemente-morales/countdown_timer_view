@@ -11,6 +11,7 @@ import android.graphics.Rect;
 
 public class CountdownTime {
     private String value;
+    private long remainingTime;
 
     private final float valueTopMargin;
 
@@ -22,9 +23,9 @@ public class CountdownTime {
 
     private TimeRemainingFormatter formatter;
 
-    public CountdownTime(TimeRemainingFormatter formatter, String value, float valueTopMargin) {
+    public CountdownTime(TimeRemainingFormatter formatter, long remainingTime, float valueTopMargin) {
         this.formatter = formatter;
-        this.value = value;
+        this.remainingTime = remainingTime;
         this.valueTopMargin = valueTopMargin;
     }
 
@@ -61,6 +62,7 @@ public class CountdownTime {
         float labelYPosition = drawPosition.y + timeLabelBounds.height();
         timeLabel1DrawPosition = new PointF(drawPosition.x, labelYPosition);
 
+        value = formatter.format(remainingTime);
         timeValuePaint.getTextBounds(value, 0, value.length(), timeValueBounds);
         float valueYPosition = valueTopMargin + labelYPosition + timeValueBounds.height();
         timeValueDrawPosition = new PointF(drawPosition.x, valueYPosition);
