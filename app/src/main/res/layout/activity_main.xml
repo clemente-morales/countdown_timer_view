@@ -17,5 +17,6 @@
         android:layout_height="match_parent"
         custom:labelTextSize="@dimen/countdown_label_text_size"
         custom:time="5000"
+        custom:valueTopMargin="20dp"
         custom:valueTextSize="@dimen/countdown_value_text_size" />
 </RelativeLayout>

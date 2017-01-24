@@ -23,7 +23,7 @@ public class CountdownView extends View {
     public static final int DEFAULT_TIME = 10000;
     public static final int ONE_SECOND_INTERVAL = 1000;
 
-    float valueTopMargin = 20f;
+    private float valueTopMargin;
     private long time;
     private final int mTextColor;
     private final int labelTextSize;
@@ -55,6 +55,7 @@ public class CountdownView extends View {
 
         try {
             time = a.getInt(R.styleable.CountDown_time, DEFAULT_TIME);
+            valueTopMargin = a.getDimensionPixelSize(R.styleable.CountDown_valueTopMargin, (int) getResources().getDimension(R.dimen.countdown_value_top_margin));
             mTextColor = a.getColor(R.styleable.CountDown_labelTextColor, getResources().getColor(R.color.defaultTextColor));
             labelTextSize = a.getDimensionPixelSize(R.styleable.CountDown_labelTextSize, (int) getResources().getDimension(R.dimen.countdown_label_text_size));
             valueTextSize = a.getDimensionPixelSize(R.styleable.CountDown_valueTextSize, (int) getResources().getDimension(R.dimen.countdown_value_text_size));

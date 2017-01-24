@@ -5,5 +5,6 @@
         <attr name="valueTextColor" format="color" />
         <attr name="labelTextSize" format="dimension" />
         <attr name="valueTextSize" format="dimension" />
+        <attr name="valueTopMargin" format="dimension" />
     </declare-styleable>
 </resources>
