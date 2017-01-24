@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -171,5 +172,9 @@ public class CountdownView extends View {
 
     public CountdownTime getTimeElement() {
         return timeElement;
+    }
+
+    public List<Milestone> getMilestones() {
+        return Collections.unmodifiableList(milestones);
     }
 }

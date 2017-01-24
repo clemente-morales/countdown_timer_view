@@ -98,8 +98,6 @@ public class CountdownViewTest {
         offerCountDown.start();
         signals.await();
         Assert.assertTrue(completed);
-
-        CountdownTime timeElement = offerCountDown.getTimeElement();
-        Assert.assertEquals("00:00:01", timeElement.getValue());
+        Assert.assertTrue(offerCountDown.getMilestones().isEmpty());
     }
 }
