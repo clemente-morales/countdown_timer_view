@@ -147,6 +147,7 @@ public class CountdownView extends View {
     }
 
     private CountDownTimer buildCountdownTimer() {
+
         return new CountDownTimer(time, ONE_SECOND_INTERVAL) {
             public void onTick(long millisUntilFinished) {
                 for (Iterator<Milestone> iterator = milestones.iterator(); iterator.hasNext(); ) {
@@ -166,5 +167,9 @@ public class CountdownView extends View {
                     onCompleteCountdownListener.onComplete();
             }
         };
+    }
+
+    public CountdownTime getTimeElement() {
+        return timeElement;
     }
 }
