@@ -25,7 +25,7 @@ public class CountdownViewTest {
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule(MainActivity.class);
 
     @Test
-    public void when_countdown_reaches_cero_on_finish_listener_is_invoked() throws InterruptedException {
+    public void when_countdown_reaches_zero_on_finish_listener_is_invoked() throws InterruptedException {
         final long waitingTime = TimeUnit.SECONDS.toMillis(3);
 
         final CountDownLatch signals = new CountDownLatch(1);
@@ -51,5 +51,8 @@ public class CountdownViewTest {
         offerCountDown.start();
         signals.await();
         Assert.assertTrue(completed);
+
+        CountdownTime timeElement = offerCountDown.getTimeElement();
+        Assert.assertEquals("00:00:01", timeElement.getValue());
     }
 }
