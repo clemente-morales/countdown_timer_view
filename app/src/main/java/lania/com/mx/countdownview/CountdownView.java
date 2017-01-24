@@ -12,6 +12,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -148,6 +149,7 @@ public class CountdownView extends View {
     }
 
     private CountDownTimer buildCountdownTimer() {
+
         return new CountDownTimer(time, ONE_SECOND_INTERVAL) {
             public void onTick(long millisUntilFinished) {
                 for (Iterator<Milestone> iterator = milestones.iterator(); iterator.hasNext(); ) {
@@ -167,5 +169,13 @@ public class CountdownView extends View {
                     onCompleteCountdownListener.onComplete();
             }
         };
+    }
+
+    public CountdownTime getTimeElement() {
+        return timeElement;
+    }
+
+    public List<Milestone> getMilestones() {
+        return Collections.unmodifiableList(milestones);
     }
 }
