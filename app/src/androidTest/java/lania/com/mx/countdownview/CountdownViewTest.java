@@ -55,4 +55,51 @@ public class CountdownViewTest {
         CountdownTime timeElement = offerCountDown.getTimeElement();
         Assert.assertEquals("00:00:01", timeElement.getValue());
     }
+
+    @Test
+    public void when_countdown_completes_milestone_listener_is_invoked() throws InterruptedException {
+        final CountdownView offerCountDown = (CountdownView) mActivityRule.getActivity().findViewById(R.id.offerCountdown);
+        final long waitingTime = TimeUnit.SECONDS.toMillis(3);
+        final CountDownLatch signals = new CountDownLatch(2);
+
+        Milestone switchDaysToHoursMilestone = new Milestone(new MilestoneListener() {
+            @Override
+            public void onComplete() {
+                offerCountDown.setFormatter(new HoursMinutesSecondsFormatter());
+                signals.countDown();
+            }
+        }, new MilestoneEvaluator() {
+            @Override
+            public boolean isCompleted(long remainingTime) {
+                long days = TimeUnit.MILLISECONDS.toDays(remainingTime);
+                return days == 0;
+            }
+        });
+
+
+        mActivityRule.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                offerCountDown.setRemainingTime(waitingTime);
+            }
+        });
+
+        offerCountDown.addMilestone(switchDaysToHoursMilestone);
+
+
+        offerCountDown.setOnCompleteCountdownListener(new MilestoneListener() {
+            @Override
+            public void onComplete() {
+                completed = true;
+                signals.countDown();
+            }
+        });
+
+        offerCountDown.start();
+        signals.await();
+        Assert.assertTrue(completed);
+
+        CountdownTime timeElement = offerCountDown.getTimeElement();
+        Assert.assertEquals("00:00:01", timeElement.getValue());
+    }
 }
