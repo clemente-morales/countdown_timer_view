@@ -15,9 +15,12 @@
         android:id="@+id/offerCountdown"
         android:layout_width="190dp"
         android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        custom:endGradientColor="@color/endGradientColor"
+        custom:isGradientColor="true"
         custom:labelTextSize="@dimen/countdown_label_text_size"
+        custom:startGradientColor="@color/startGradientColor"
         custom:time="5000"
-        custom:valueTopMargin="20dp"
         custom:valueTextSize="@dimen/countdown_value_text_size"
-        android:layout_centerInParent="true"/>
+        custom:valueTopMargin="20dp" />
 </RelativeLayout>

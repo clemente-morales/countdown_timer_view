@@ -4,4 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="defaultTextColor">#000000</color>
+
+    <color name="startGradientColor">#00c3ff</color>
+    <color name="endGradientColor">#ffff1c</color>
+
 </resources>

@@ -6,5 +6,9 @@
         <attr name="labelTextSize" format="dimension" />
         <attr name="valueTextSize" format="dimension" />
         <attr name="valueTopMargin" format="dimension" />
+
+        <attr name="startGradientColor" format="color" />
+        <attr name="endGradientColor" format="color" />
+        <attr name="isGradientColor" format="boolean" />
     </declare-styleable>
 </resources>

@@ -27,6 +27,8 @@ public class CountdownTime {
 
     private TimeRemainingFormatter formatter;
 
+    private Rect timeValueBounds;
+
     public CountdownTime(TimeRemainingFormatter formatter, long remainingTime, float valueTopMargin, Paint labelTextPaint, Paint valueTextPaint) {
         this.formatter = formatter;
         this.remainingTime = remainingTime;
@@ -67,9 +69,13 @@ public class CountdownTime {
         return timeValueDrawPosition;
     }
 
+    public Rect getTimeValueBounds() {
+        return timeValueBounds;
+    }
+
     void calculatePosition(PointF drawPosition) {
         Rect timeLabelBounds = new Rect();
-        Rect timeValueBounds = new Rect();
+        timeValueBounds = new Rect();
 
         labelTextPaint.getTextBounds(formatter.getLabel1(), 0, formatter.getLabel1().length(), timeLabelBounds);
 

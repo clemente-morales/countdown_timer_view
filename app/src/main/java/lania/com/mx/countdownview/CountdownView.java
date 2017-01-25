@@ -5,9 +5,12 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PointF;
+import android.graphics.Rect;
+import android.graphics.SweepGradient;
 import android.graphics.Typeface;
 import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -23,14 +26,20 @@ import java.util.List;
 public class CountdownView extends View {
     public static final int DEFAULT_TIME = 10000;
     public static final int ONE_SECOND_INTERVAL = 1000;
+    private final boolean isGradientColor;
 
     private float valueTopMargin;
     private long time;
     private final int mTextColor;
     private final int labelTextSize;
     private final int valueTextSize;
+
+    private int startGradientColor;
+    private int endGradientColor;
+
+
     private Paint labelTextPaint;
-    private Paint valueTextPaint;
+    protected TextPaint valueTextPaint;
     private CountdownTime timeElement;
     private TimeRemainingFormatter formatter;
 
@@ -60,6 +69,11 @@ public class CountdownView extends View {
             mTextColor = a.getColor(R.styleable.CountDown_labelTextColor, getResources().getColor(R.color.defaultTextColor));
             labelTextSize = a.getDimensionPixelSize(R.styleable.CountDown_labelTextSize, (int) getResources().getDimension(R.dimen.countdown_label_text_size));
             valueTextSize = a.getDimensionPixelSize(R.styleable.CountDown_valueTextSize, (int) getResources().getDimension(R.dimen.countdown_value_text_size));
+
+            isGradientColor = a.getBoolean(R.styleable.CountDown_isGradientColor, false);
+            startGradientColor = a.getColor(R.styleable.CountDown_startGradientColor, 0);
+            endGradientColor = a.getColor(R.styleable.CountDown_endGradientColor, 0);
+
         } finally {
             a.recycle();
         }
@@ -69,6 +83,7 @@ public class CountdownView extends View {
 
     /**
      * Use only to animate the timer.
+     *
      * @param time Remaining time to display.
      */
     public void setTime(int time) {
@@ -111,6 +126,20 @@ public class CountdownView extends View {
         float hh = (float) h - ypad;
 
         timeElement.calculatePosition(initialDrawingPosition);
+
+        if (isGradientColor) {
+            loadShader();
+        }
+    }
+
+    /**
+     * Override to change the shader.
+     */
+    protected void loadShader() {
+        Rect timeValueBounds = timeElement.getTimeValueBounds();
+        int centerX = timeValueBounds.width() / 2;
+        int centerY = timeValueBounds.height() / 2;
+        valueTextPaint.setShader(new SweepGradient(centerX, centerY, startGradientColor, endGradientColor));
     }
 
     /**
@@ -128,15 +157,16 @@ public class CountdownView extends View {
     }
 
     private void init() {
-        labelTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        labelTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         labelTextPaint.setColor(mTextColor);
         labelTextPaint.setTextSize(labelTextSize);
         labelTextPaint.setTypeface(Typeface.DEFAULT);
 
-        valueTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        valueTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
         valueTextPaint.setColor(mTextColor);
         valueTextPaint.setTextSize(valueTextSize);
         valueTextPaint.setTypeface(Typeface.SANS_SERIF);
+        valueTextPaint.setAntiAlias(true);
 
         if (formatter == null)
             formatter = new DayHoursMinutesFormatter();
