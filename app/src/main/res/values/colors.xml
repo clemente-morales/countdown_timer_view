@@ -5,7 +5,8 @@
     <color name="colorAccent">#FF4081</color>
     <color name="defaultTextColor">#000000</color>
 
-    <color name="startGradientColor">#00c3ff</color>
-    <color name="endGradientColor">#ffff1c</color>
+    <color name="countdownColor">#b89b56</color>
+    <color name="startGradientColor">#ffda85</color>
+    <color name="endGradientColor">#9b6c13</color>
 
 </resources>

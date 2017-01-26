@@ -13,9 +13,10 @@
 
     <lania.com.mx.countdownview.CountdownView
         android:id="@+id/offerCountdown"
-        android:layout_width="190dp"
+        android:layout_width="160dp"
         android:layout_height="100dp"
         android:layout_centerInParent="true"
+        custom:valueTextColor="@color/countdownColor"
         custom:endGradientColor="@color/endGradientColor"
         custom:isGradientColor="true"
         custom:labelTextSize="@dimen/countdown_label_text_size"
