@@ -38,7 +38,7 @@ public class CountdownView extends View {
     private int endGradientColor;
 
 
-    private Paint labelTextPaint;
+    private TextPaint labelTextPaint;
     protected TextPaint valueTextPaint;
     private CountdownTime timeElement;
     private TimeRemainingFormatter formatter;
@@ -89,6 +89,11 @@ public class CountdownView extends View {
     public void setTime(int time) {
         this.time = time;
         countdownTimer.onTick(time);
+    }
+
+    public void setLabelTextPaint(TextPaint labelTextPaint) {
+        this.timeElement.setLabelTextPaint(labelTextPaint);
+        invalidate();
     }
 
     public void setRemainingTime(long time) {
@@ -157,7 +162,7 @@ public class CountdownView extends View {
     }
 
     private void init() {
-        labelTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+        labelTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
         labelTextPaint.setColor(mTextColor);
         labelTextPaint.setTextSize(labelTextSize);
         labelTextPaint.setTypeface(Typeface.DEFAULT);

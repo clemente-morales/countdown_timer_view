@@ -49,6 +49,14 @@ public class CountdownTime {
         this.value = value;
     }
 
+    public void setLabelTextPaint(Paint labelTextPaint) {
+        this.labelTextPaint = labelTextPaint;
+    }
+
+    public void setValueTextPaint(Paint valueTextPaint) {
+        this.valueTextPaint = valueTextPaint;
+    }
+
     public void updateValue(long millisUntilFinished) {
         this.value = formatter.format(millisUntilFinished);
     }

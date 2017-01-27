@@ -2,9 +2,14 @@ package lania.com.mx.countdownview;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextPaint;
+import android.view.View;
 import android.view.animation.LinearInterpolator;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.concurrent.TimeUnit;
@@ -41,12 +46,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         countdownView.addMilestone(switchDaysToHoursMilestone);
-
         countdownView.setFormatter(new DayHoursMinutesFormatter());
+        addAnimation();
 
+        Button boldText = (Button) findViewById(R.id.boldLabel);
+        boldText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextPaint textPaint = buildBoldLabelTextPaint();
+                countdownView.setLabelTextPaint(textPaint);
+            }
+        });
+
+    }
+
+    private TextPaint buildBoldLabelTextPaint() {
+        TextPaint labelTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+        labelTextPaint.setColor(getResources().getColor(R.color.defaultTextColor));
+        labelTextPaint.setTextSize((int)getResources().getDimension(R.dimen.countdown_label_text_size));
+        labelTextPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+        return labelTextPaint;
+    }
+
+    private void addAnimation() {
         // Animate starting point
         LinearInterpolator linearInterpolator = new LinearInterpolator();
-        ObjectAnimator restoreCurrentRemainingTime = ObjectAnimator.ofInt(countdownView, REMAINING_TIME_PROPERTY, 180000 , 5000 );
+        ObjectAnimator restoreCurrentRemainingTime = ObjectAnimator.ofInt(countdownView, REMAINING_TIME_PROPERTY, 180000, 5000);
         restoreCurrentRemainingTime.setDuration(ANIM_DURATION);
         restoreCurrentRemainingTime.setInterpolator(linearInterpolator);
         restoreCurrentRemainingTime.addListener(new Animator.AnimatorListener() {

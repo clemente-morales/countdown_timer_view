@@ -11,6 +11,13 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="lania.com.mx.countdownview.MainActivity">
 
+    <Button
+        android:id="@+id/boldLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:text="Bold label"/>
+
     <lania.com.mx.countdownview.CountdownView
         android:id="@+id/offerCountdown"
         android:layout_width="160dp"
