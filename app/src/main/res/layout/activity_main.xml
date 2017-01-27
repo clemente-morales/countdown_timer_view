@@ -27,6 +27,8 @@
         custom:endGradientColor="@color/endGradientColor"
         custom:isGradientColor="true"
         custom:labelTextSize="@dimen/countdown_label_text_size"
+        custom:labelLeftMargin="10dp"
+        custom:labelRightMargin="10dp"
         custom:startGradientColor="@color/startGradientColor"
         custom:time="5000"
         custom:valueTextSize="@dimen/countdown_value_text_size"

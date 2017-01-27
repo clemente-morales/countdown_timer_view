@@ -4,6 +4,8 @@
         <attr name="labelTextColor" format="color" />
         <attr name="valueTextColor" format="color" />
         <attr name="labelTextSize" format="dimension" />
+        <attr name="labelRightMargin" format="dimension" />
+        <attr name="labelLeftMargin" format="dimension" />
         <attr name="valueTextSize" format="dimension" />
         <attr name="valueTopMargin" format="dimension" />
 

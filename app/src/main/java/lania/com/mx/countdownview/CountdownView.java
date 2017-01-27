@@ -27,6 +27,8 @@ public class CountdownView extends View {
     public static final int DEFAULT_TIME = 10000;
     public static final int ONE_SECOND_INTERVAL = 1000;
     private final boolean isGradientColor;
+    private final int labelLeftMargin;
+    private final int labelRightMargin;
 
     private float valueTopMargin;
     private long time;
@@ -65,9 +67,13 @@ public class CountdownView extends View {
 
         try {
             time = a.getInt(R.styleable.CountDown_time, DEFAULT_TIME);
-            valueTopMargin = a.getDimensionPixelSize(R.styleable.CountDown_valueTopMargin, (int) getResources().getDimension(R.dimen.countdown_value_top_margin));
+
             mTextColor = a.getColor(R.styleable.CountDown_labelTextColor, getResources().getColor(R.color.defaultTextColor));
             labelTextSize = a.getDimensionPixelSize(R.styleable.CountDown_labelTextSize, (int) getResources().getDimension(R.dimen.countdown_label_text_size));
+            labelLeftMargin = a.getDimensionPixelSize(R.styleable.CountDown_labelLeftMargin, 0);
+            labelRightMargin = a.getDimensionPixelSize(R.styleable.CountDown_labelRightMargin, 0);
+
+            valueTopMargin = a.getDimensionPixelSize(R.styleable.CountDown_valueTopMargin, (int) getResources().getDimension(R.dimen.countdown_value_top_margin));
             valueTextSize = a.getDimensionPixelSize(R.styleable.CountDown_valueTextSize, (int) getResources().getDimension(R.dimen.countdown_value_text_size));
 
             isGradientColor = a.getBoolean(R.styleable.CountDown_isGradientColor, false);
@@ -152,7 +158,7 @@ public class CountdownView extends View {
      */
     @NonNull
     protected CountdownTime buildCountdownTime(float valueTopMargin, Paint labelTextPaint, Paint valueTextPaint) {
-        return new CountdownTime(formatter, time, valueTopMargin, labelTextPaint, valueTextPaint);
+        return new CountdownTime(formatter, time, valueTopMargin, labelTextPaint, valueTextPaint, labelLeftMargin, labelRightMargin);
     }
 
     @Override

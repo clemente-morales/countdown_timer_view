@@ -29,12 +29,19 @@ public class CountdownTime {
 
     private Rect timeValueBounds;
 
-    public CountdownTime(TimeRemainingFormatter formatter, long remainingTime, float valueTopMargin, Paint labelTextPaint, Paint valueTextPaint) {
+    private int leftLabelMargin;
+
+    private int rightLabelMargin;
+
+    public CountdownTime(TimeRemainingFormatter formatter, long remainingTime, float valueTopMargin, Paint labelTextPaint, Paint valueTextPaint,
+                         int leftLabelMargin, int rightLabelMargin) {
         this.formatter = formatter;
         this.remainingTime = remainingTime;
         this.valueTopMargin = valueTopMargin;
         this.labelTextPaint = labelTextPaint;
         this.valueTextPaint = valueTextPaint;
+        this.leftLabelMargin = leftLabelMargin;
+        this.rightLabelMargin = rightLabelMargin;
     }
 
     public void setFormatter(TimeRemainingFormatter formatter) {
@@ -88,7 +95,7 @@ public class CountdownTime {
         labelTextPaint.getTextBounds(formatter.getLabel1(), 0, formatter.getLabel1().length(), timeLabelBounds);
 
         float labelYPosition = drawPosition.y + timeLabelBounds.height();
-        timeLabel1DrawPosition = new PointF(drawPosition.x, labelYPosition);
+        timeLabel1DrawPosition = new PointF(drawPosition.x + leftLabelMargin, labelYPosition);
 
         value = formatter.format(remainingTime);
         valueTextPaint.getTextBounds(value, 0, value.length(), timeValueBounds);
@@ -101,7 +108,7 @@ public class CountdownTime {
         timeLabel2DrawPosition = new PointF(secondLabelXPosition, labelYPosition);
 
         labelTextPaint.getTextBounds(formatter.getLabel3(), 0, formatter.getLabel3().length(), timeLabelBounds);
-        float thirdLabelXPosition = timeValuesXPosition - timeLabelBounds.width();
+        float thirdLabelXPosition = timeValuesXPosition - timeLabelBounds.width() - rightLabelMargin;
         timeLabel3DrawPosition = new PointF(thirdLabelXPosition, labelYPosition);
     }
 
