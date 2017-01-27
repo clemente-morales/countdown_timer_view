@@ -169,11 +169,13 @@ public class CountdownView extends View {
 
     private void init() {
         labelTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+        labelTextPaint.setAntiAlias(true);
         labelTextPaint.setColor(mTextColor);
         labelTextPaint.setTextSize(labelTextSize);
         labelTextPaint.setTypeface(Typeface.DEFAULT);
 
         valueTextPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        valueTextPaint.setAntiAlias(true);
         valueTextPaint.setColor(mTextColor);
         valueTextPaint.setTextSize(valueTextSize);
         valueTextPaint.setTypeface(Typeface.SANS_SERIF);
@@ -183,7 +185,7 @@ public class CountdownView extends View {
             formatter = new DayHoursMinutesFormatter();
 
         timeElement = buildCountdownTime(valueTopMargin, labelTextPaint, valueTextPaint);
-        initialDrawingPosition = new PointF(initialXPosition, initialYPosition);
+        initialDrawingPosition = new PointF(getPaddingLeft(), getPaddingTop());
         timeElement.calculatePosition(initialDrawingPosition);
 
         countdownTimer = buildCountdownTimer();
